@@ -1,4 +1,5 @@
 import { IncomingMessage, OutgoingMessage, Account, SignSendTransactionArguments, SignSendTransactionResult } from './interfaces'
+import generateSigner from './signer'
 import { Messenger } from './util/Messenger'
 import { onWindowLoad } from './util/onWindowLoad'
 
@@ -58,23 +59,7 @@ export default class KoinosWallet {
     return result as Account[]
   }
 
-  async signTransaction(args: SignSendTransactionArguments, timeout = 60000) {
-    const { result } = await this.messenger.sendRequest(WALLET_CONNECTOR_MESSENGER_ID, { 
-      scope: 'signer', 
-      command: 'signTransaction', 
-      arguments: JSON.stringify(args) 
-    }, timeout)
-
-    return result as SignSendTransactionResult
-  }
-
-  async signAndSendTransaction(args: SignSendTransactionArguments, timeout = 60000) {
-    const { result } = await this.messenger.sendRequest(WALLET_CONNECTOR_MESSENGER_ID, { 
-      scope: 'signer', 
-      command: 'signAndSendTransaction', 
-      arguments: JSON.stringify(args) 
-    }, timeout)
-
-    return result as SignSendTransactionResult
+  getSigner(signerAddress: string, timeout: number = 60000) {
+    return generateSigner(signerAddress, this.messenger, WALLET_CONNECTOR_MESSENGER_ID, timeout)
   }
 }
