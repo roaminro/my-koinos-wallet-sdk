@@ -375,7 +375,9 @@ class $149c1bd638913645$export$2e2bcd8739ae039 {
     iframeLoaded = false;
     constructor(walletUrl){
         this.iframe = document.createElement("iframe");
-        this.iframe.onload = ()=>this.iframeLoaded = true;
+        this.iframe.onload = ()=>{
+            this.iframeLoaded = true;
+        };
         this.iframe.className = $149c1bd638913645$var$KOINOS_WALLET_IFRAME_CLASS;
         this.iframe.hidden = true;
         this.iframe.src = walletUrl;

@@ -24,7 +24,9 @@ export default class KoinosWallet {
 
   constructor(walletUrl: string) {
     this.iframe = document.createElement('iframe')
-    this.iframe.onload = () => this.iframeLoaded = true
+    this.iframe.onload = () => {
+      this.iframeLoaded = true
+    }
     this.iframe.className = KOINOS_WALLET_IFRAME_CLASS
     this.iframe.hidden = true
     this.iframe.src = walletUrl
