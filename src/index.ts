@@ -28,6 +28,7 @@ export default class KoinosWallet {
     this.iframe.className = KOINOS_WALLET_IFRAME_CLASS
     this.iframe.hidden = true
     this.iframe.src = walletUrl
+    console.log('this.iframe.contentWindow', this.iframe.contentWindow)
     document.body.appendChild(this.iframe)
 
     KoinosWallet.checkIfAlreadyInitialized()
@@ -91,7 +92,7 @@ export default class KoinosWallet {
     if (!this.iframeLoaded) {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
-    
+
     return generateProvider(this.messenger, WALLET_CONNECTOR_MESSENGER_ID, timeout)
   }
 }

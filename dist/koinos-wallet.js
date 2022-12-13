@@ -389,6 +389,7 @@ class $882b6d93070905b3$export$2e2bcd8739ae039 {
         this.iframe.className = $882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS;
         this.iframe.hidden = true;
         this.iframe.src = walletUrl;
+        console.log("this.iframe.contentWindow", this.iframe.contentWindow);
         document.body.appendChild(this.iframe);
         $882b6d93070905b3$export$2e2bcd8739ae039.checkIfAlreadyInitialized();
     }
