@@ -20,10 +20,12 @@ onWindowLoad()
 export default class KoinosWallet {
   private messenger: Messenger<IncomingMessage, OutgoingMessage>
   private iframe: HTMLIFrameElement
+  private iframeLoaded: boolean = false
 
   constructor(walletUrl: string) {
     this.iframe = document.createElement('iframe')
-    this.iframe.id = KOINOS_WALLET_IFRAME_CLASS
+    this.iframe.onload = () => this.iframeLoaded = true
+    this.iframe.className = KOINOS_WALLET_IFRAME_CLASS
     this.iframe.hidden = true
     this.iframe.src = walletUrl
     document.body.appendChild(this.iframe)
@@ -40,6 +42,10 @@ export default class KoinosWallet {
   }
 
   async connect() {
+    if (!this.iframeLoaded) {
+      throw new Error('Koinos-Wallet is not loaded yet')
+    }
+
     this.messenger = new Messenger<IncomingMessage, OutgoingMessage>(this.iframe.contentWindow as Window, KOINOS_WALLET_MESSENGER_ID)
 
     try {
@@ -61,6 +67,10 @@ export default class KoinosWallet {
   }
 
   async getAccounts(timeout = 60000) {
+    if (!this.iframeLoaded) {
+      throw new Error('Koinos-Wallet is not loaded yet')
+    }
+  
     const { result } = await this.messenger.sendRequest(WALLET_CONNECTOR_MESSENGER_ID, {
       scope: 'accounts',
       command: 'getAccounts'
@@ -70,10 +80,18 @@ export default class KoinosWallet {
   }
 
   getSigner(signerAddress: string, timeout: number = 60000) {
+    if (!this.iframeLoaded) {
+      throw new Error('Koinos-Wallet is not loaded yet')
+    }
+
     return generateSigner(signerAddress, this.messenger, WALLET_CONNECTOR_MESSENGER_ID, timeout)
   }
 
   getProvider(timeout: number = 60000) {
+    if (!this.iframeLoaded) {
+      throw new Error('Koinos-Wallet is not loaded yet')
+    }
+    
     return generateProvider(this.messenger, WALLET_CONNECTOR_MESSENGER_ID, timeout)
   }
 }
