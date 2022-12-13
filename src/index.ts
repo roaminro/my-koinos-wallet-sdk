@@ -20,17 +20,12 @@ onWindowLoad()
 export default class KoinosWallet {
   private messenger: Messenger<IncomingMessage, OutgoingMessage>
   private iframe: HTMLIFrameElement
-  private iframeLoaded: boolean = false
 
   constructor(walletUrl: string) {
     this.iframe = document.createElement('iframe')
-    this.iframe.onload = () => {
-      this.iframeLoaded = true
-    }
     this.iframe.className = KOINOS_WALLET_IFRAME_CLASS
     this.iframe.hidden = true
     this.iframe.src = walletUrl
-    console.log('this.iframe.contentWindow', this.iframe.contentWindow)
     document.body.appendChild(this.iframe)
 
     KoinosWallet.checkIfAlreadyInitialized()
@@ -45,9 +40,7 @@ export default class KoinosWallet {
   }
 
   async connect() {
-    console.log('this.iframe.contentWindow2', this.iframe.contentWindow)
-
-    if (!this.iframeLoaded) {
+    if (!this.iframe.contentWindow) {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
 
@@ -72,7 +65,7 @@ export default class KoinosWallet {
   }
 
   async getAccounts(timeout = 60000) {
-    if (!this.iframeLoaded) {
+    if (!this.iframe.contentWindow) {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
   
@@ -85,7 +78,7 @@ export default class KoinosWallet {
   }
 
   getSigner(signerAddress: string, timeout: number = 60000) {
-    if (!this.iframeLoaded) {
+    if (!this.iframe.contentWindow) {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
 
@@ -93,7 +86,7 @@ export default class KoinosWallet {
   }
 
   getProvider(timeout: number = 60000) {
-    if (!this.iframeLoaded) {
+    if (!this.iframe.contentWindow) {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
 

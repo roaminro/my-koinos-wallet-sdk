@@ -382,16 +382,11 @@ const $882b6d93070905b3$var$KOINOS_WALLET_MESSENGER_ID = "wallet-connector-paren
 .catch(()=>{}) // Prevents unhandledPromiseRejectionWarning, which happens when using React SSR;
 ;
 class $882b6d93070905b3$export$2e2bcd8739ae039 {
-    iframeLoaded = false;
     constructor(walletUrl){
         this.iframe = document.createElement("iframe");
-        this.iframe.onload = ()=>{
-            this.iframeLoaded = true;
-        };
         this.iframe.className = $882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS;
         this.iframe.hidden = true;
         this.iframe.src = walletUrl;
-        console.log("this.iframe.contentWindow", this.iframe.contentWindow);
         document.body.appendChild(this.iframe);
         $882b6d93070905b3$export$2e2bcd8739ae039.checkIfAlreadyInitialized();
     }
@@ -400,8 +395,7 @@ class $882b6d93070905b3$export$2e2bcd8739ae039 {
         this.iframe.remove();
     }
     async connect() {
-        console.log("this.iframe.contentWindow2", this.iframe.contentWindow);
-        if (!this.iframeLoaded) throw new Error("Koinos-Wallet is not loaded yet");
+        if (!this.iframe.contentWindow) throw new Error("Koinos-Wallet is not loaded yet");
         this.messenger = new (0, $7854553819392e1e$export$1182391b36b9d1bf)(this.iframe.contentWindow, $882b6d93070905b3$var$KOINOS_WALLET_MESSENGER_ID);
         try {
             await this.messenger.ping($882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID);
@@ -415,7 +409,7 @@ class $882b6d93070905b3$export$2e2bcd8739ae039 {
         if (document.getElementsByClassName($882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS).length) console.warn("An instance of Koinos-Wallet was already initialized. This is probably a mistake. Make sure that you use the same Koinos-Wallet instance throughout your app.");
     }
     async getAccounts(timeout = 60000) {
-        if (!this.iframeLoaded) throw new Error("Koinos-Wallet is not loaded yet");
+        if (!this.iframe.contentWindow) throw new Error("Koinos-Wallet is not loaded yet");
         const { result: result  } = await this.messenger.sendRequest($882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID, {
             scope: "accounts",
             command: "getAccounts"
@@ -423,11 +417,11 @@ class $882b6d93070905b3$export$2e2bcd8739ae039 {
         return result;
     }
     getSigner(signerAddress, timeout = 60000) {
-        if (!this.iframeLoaded) throw new Error("Koinos-Wallet is not loaded yet");
+        if (!this.iframe.contentWindow) throw new Error("Koinos-Wallet is not loaded yet");
         return (0, $7371ac622f10d4f8$export$2e2bcd8739ae039)(signerAddress, this.messenger, $882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID, timeout);
     }
     getProvider(timeout = 60000) {
-        if (!this.iframeLoaded) throw new Error("Koinos-Wallet is not loaded yet");
+        if (!this.iframe.contentWindow) throw new Error("Koinos-Wallet is not loaded yet");
         return (0, $e18943e3c35946bf$export$2e2bcd8739ae039)(this.messenger, $882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID, timeout);
     }
 }
