@@ -1,5 +1,5 @@
 import { IncomingMessage, OutgoingMessage, Account } from './interfaces'
-import getProvider from './provider'
+import generateProvider from './provider'
 import generateSigner from './signer'
 import { Messenger } from './util/Messenger'
 import { onWindowLoad } from './util/onWindowLoad'
@@ -65,6 +65,6 @@ export default class KoinosWallet {
   }
 
   getProvider(timeout: number = 60000) {
-    return getProvider(this.messenger, WALLET_CONNECTOR_MESSENGER_ID, timeout)
+    return generateProvider(this.messenger, WALLET_CONNECTOR_MESSENGER_ID, timeout)
   }
 }

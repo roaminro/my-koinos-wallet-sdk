@@ -1,14 +1,12 @@
 import {
   BlockJson,
   CallContractOperationJson,
-  TransactionJson,
-  TransactionJsonWait,
-  TransactionReceipt,
+  TransactionJson
 } from 'koilib/lib/interface'
 import { IncomingMessage, OutgoingMessage, TransactionResult } from './interfaces'
 import { Messenger } from './util/Messenger'
 
-export default function getProvider(
+export default function generateProvider(
   messenger: Messenger<IncomingMessage, OutgoingMessage>,
   walletConnectorMessengerId: string,
   timeout: number
