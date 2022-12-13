@@ -1,0 +1,36 @@
+{
+  "name": "@roamin/koinos-wallet-sdk",
+  "version": "0.0.1",
+  "source": "src/index.ts",
+  "main": "dist/koinos-wallet.js",
+  "module": "dist/koinos-wallet.module.js",
+  "types": "dist/koinos-wallet.d.ts",
+  "repository": "https://github.com/roaminro/koinos-wallet-sdk.git",
+  "author": "Roamin",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@parcel/packager-ts": "2.8.1",
+    "@parcel/transformer-typescript-types": "2.8.1",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "eslint": "^8.29.0",
+    "parcel": "^2.8.1",
+    "typescript": ">=3.0.0",
+    "koilib": "^5.2.3"
+  },
+  "dependencies": {},
+  "scripts": {
+    "lint": "eslint --max-warnings 0 --ext ts \"src/**/*.ts\"",
+    "watch": "parcel watch",
+    "build": "parcel build"
+  },
+  "targets": {
+    "main": {
+      "optimize": true
+    },
+    "module": {
+      "optimize": true
+    }
+  }
+}
