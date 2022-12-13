@@ -1,4 +1,4 @@
-import { SendTransactionOptions, TransactionJson, TransactionReceipt } from 'koilib/lib/interface'
+import { SendTransactionOptions, TransactionJson, TransactionJsonWait, TransactionReceipt } from 'koilib/lib/interface'
 
 export interface OutgoingMessage {
   scope: string
@@ -28,4 +28,9 @@ export interface Account {
   signers?: {
     address: string,
   }[]
+}
+
+export interface TransactionResult {
+  receipt: TransactionReceipt
+  transaction: TransactionJsonWait
 }

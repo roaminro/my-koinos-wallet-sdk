@@ -6,7 +6,7 @@ import {
   TransactionJsonWait,
   TransactionReceipt,
 } from 'koilib/lib/interface'
-import { IncomingMessage, OutgoingMessage } from './interfaces'
+import { IncomingMessage, OutgoingMessage, TransactionResult } from './interfaces'
 import { Messenger } from './util/Messenger'
 
 export default function generateSigner(
@@ -19,7 +19,7 @@ export default function generateSigner(
     getAddress: () => signerAddress,
 
     getPrivateKey: (): string => {
-      throw new Error('getPrivateKey is not available')
+      throw new Error('not implemented')
     },
 
     signHash: async (hash: Uint8Array): Promise<Uint8Array> => {
@@ -85,10 +85,7 @@ export default function generateSigner(
     sendTransaction: async (
       transaction: TransactionJson,
       options?: SendTransactionOptions
-    ): Promise<{
-      receipt: TransactionReceipt;
-      transaction: TransactionJsonWait;
-    }> => {
+    ): Promise<TransactionResult> => {
       const { result } = await messenger.sendRequest(walletConnectorMessengerId, {
         scope: 'signer',
         command: 'signAndSendTransaction',
@@ -97,30 +94,35 @@ export default function generateSigner(
           transaction,
           options
         })
-      }, timeout)
+      }, timeout);
 
-      return result as {
-        receipt: TransactionReceipt;
-        transaction: TransactionJsonWait;
+      (result as TransactionResult).transaction.wait = async (
+        type: 'byTransactionId' | 'byBlock' = 'byBlock',
+        waitTimeout = 60000
+      ) => {
+        const { result: waitResult } = await messenger.sendRequest(walletConnectorMessengerId, {
+          scope: 'provider',
+          command: 'wait',
+          arguments: JSON.stringify({
+            transactionId: (result as TransactionResult).transaction.id,
+            type,
+            timeout: waitTimeout
+          })
+        }, timeout)
+
+
+        return waitResult as { blockId: string; blockNumber?: number }
       }
-      // response.transaction.wait = async (
-      //   type: 'byTransactionId' | 'byBlock' = 'byBlock',
-      //   timeout = 60000
-      // ) => {
-      //   return messenger.sendDomMessage('background', 'provider:wait', {
-      //     txId: response.transaction.id,
-      //     type,
-      //     timeout,
-      //   })
-      // }
+
+      return result as TransactionResult
     },
 
     prepareBlock: (): Promise<BlockJson> => {
-      throw new Error('prepareBlock is not available')
+      throw new Error('not implemented')
     },
 
     signBlock: (): Promise<BlockJson> => {
-      throw new Error('signBlock is not available')
+      throw new Error('not implemented')
     },
   }
 }
