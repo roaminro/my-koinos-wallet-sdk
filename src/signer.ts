@@ -3,8 +3,6 @@ import {
   BlockJson,
   SendTransactionOptions,
   TransactionJson,
-  TransactionJsonWait,
-  TransactionReceipt,
 } from 'koilib/lib/interface'
 import { IncomingMessage, OutgoingMessage, TransactionResult } from './interfaces'
 import { Messenger } from './util/Messenger'
