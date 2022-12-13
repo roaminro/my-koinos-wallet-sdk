@@ -1,2 +1,421 @@
-var e,s,t,n,a;function r(e,s,t){return{async call(n,a){const{result:r}=await e.sendRequest(s,{scope:"provider",command:"call",arguments:JSON.stringify({method:n,params:a})},t);return r},async getNonce(n){const{result:a}=await e.sendRequest(s,{scope:"provider",command:"getNonce",arguments:JSON.stringify({account:n})},t);return a},async getAccountRc(n){const{result:a}=await e.sendRequest(s,{scope:"provider",command:"getAccountRc",arguments:JSON.stringify({account:n})},t);return a},async getTransactionsById(n){const{result:a}=await e.sendRequest(s,{scope:"provider",command:"getTransactionsById",arguments:JSON.stringify({transactionIds:n})},t);return a},async getBlocksById(n){const{result:a}=await e.sendRequest(s,{scope:"provider",command:"getBlocksById",arguments:JSON.stringify({blockIds:n})},t);return a},async getHeadInfo(){const{result:n}=await e.sendRequest(s,{scope:"provider",command:"getHeadInfo",arguments:JSON.stringify({})},t);return n},async getChainId(){const{result:n}=await e.sendRequest(s,{scope:"provider",command:"getChainId",arguments:JSON.stringify({})},t);return n},async getBlocks(n,a=1,r){const{result:i}=await e.sendRequest(s,{scope:"provider",command:"getBlocks",arguments:JSON.stringify({height:n,numBlocks:a,idRef:r})},t);return i},async getBlock(n){const{result:a}=await e.sendRequest(s,{scope:"provider",command:"getBlock",arguments:JSON.stringify({height:n})},t);return a},async wait(n,a="byBlock",r=3e4){const{result:i}=await e.sendRequest(s,{scope:"provider",command:"wait",arguments:JSON.stringify({transactionId:n,type:a,timeout:r})},t);return i},async sendTransaction(n,a=!0){const{result:r}=await e.sendRequest(s,{scope:"provider",command:"sendTransaction",arguments:JSON.stringify({transaction:n,broadcast:a})},t);return r.transaction.wait=async(a="byBlock",r=6e4)=>{const{result:i}=await e.sendRequest(s,{scope:"provider",command:"wait",arguments:JSON.stringify({transactionId:n.id,type:a,timeout:r})},t);return i},r},async readContract(n){const{result:a}=await e.sendRequest(s,{scope:"provider",command:"readContract",arguments:JSON.stringify({operation:n})},t);return a},async submitBlock(n){const{result:a}=await e.sendRequest(s,{scope:"provider",command:"submitBlock",arguments:JSON.stringify({block:n})},t);return a}}}function i(e,s,t,n){return{getAddress:()=>e,getPrivateKey:()=>{throw new Error("not implemented")},signHash:async a=>{const{result:r}=await s.sendRequest(t,{scope:"signer",command:"signHash",arguments:JSON.stringify({signerAddress:e,hash:a})},n);return r},signMessage:async a=>{const{result:r}=await s.sendRequest(t,{scope:"signer",command:"signMessage",arguments:JSON.stringify({signerAddress:e,message:a})},n);return r},prepareTransaction:async a=>{const{result:r}=await s.sendRequest(t,{scope:"signer",command:"prepareTransaction",arguments:JSON.stringify({signerAddress:e,transaction:a})},n);return r},signTransaction:async(a,r)=>{const{result:i}=await s.sendRequest(t,{scope:"signer",command:"signTransaction",arguments:JSON.stringify({signerAddress:e,transaction:a,options:{abis:r}})},n);return i},sendTransaction:async(a,r)=>{const{result:i}=await s.sendRequest(t,{scope:"signer",command:"signAndSendTransaction",arguments:JSON.stringify({signerAddress:e,transaction:a,options:r})},n);return i.transaction.wait=async(e="byBlock",a=6e4)=>{const{result:r}=await s.sendRequest(t,{scope:"provider",command:"wait",arguments:JSON.stringify({transactionId:i.transaction.id,type:e,timeout:a})},n);return r},i},prepareBlock:()=>{throw new Error("not implemented")},signBlock:()=>{throw new Error("not implemented")}}}e=module.exports,Object.defineProperty(e,"__esModule",{value:!0,configurable:!0}),s=module.exports,t="default",n=()=>m,Object.defineProperty(s,t,{get:n,set:a,enumerable:!0,configurable:!0});const o="messenger::ping::request";class c{constructor(e,s,t=!0,n="*"){this.id=s,this.target=e,this.isTargetWindow=t,this.targetOrigin=n,this.onMessageListenerAdded=!1,this.addMessageListener()}onMessageListener=async e=>{if("*"!==this.targetOrigin&&!this.targetOrigin.startsWith(e.origin))return;const{data:s,ports:t}=e;s.type!==o&&s.to!==this.id||(s&&t&&t[0]?(s.type===o?t[0].postMessage({type:"messenger::ping::ack"}):this.onRequestFn&&await this.onRequestFn({sender:e.origin,data:JSON.parse(s.data),sendData:e=>{t[0].postMessage({data:e})},sendError:e=>{t[0].postMessage({error:e})}}),t[0].close()):s&&this.onMessageFn&&this.onMessageFn({sender:e.origin,data:JSON.parse(s.data)}))};addMessageListener=()=>{this.onMessageListenerAdded||(this.onMessageListenerAdded=!0,self.addEventListener("message",this.onMessageListener))};ping=async(e,s=20)=>{if(!this.onMessageListenerAdded)throw new Error("ping was cancelled");try{await this._sendRequest({type:o,from:this.id,to:e},500)}catch(t){if(--s<=0)throw new Error(`could not ping target "${e}"`);await this.ping(e,s)}};onMessage=e=>{this.onMessageFn=e};onRequest=e=>{this.onRequestFn=e};removeListener=()=>{this.onMessageListenerAdded&&(this.onMessageListenerAdded=!1,self.removeEventListener("message",this.onMessageListener))};sendMessage=(e,s)=>this._sendMessage({data:JSON.stringify(s),to:e,from:this.id});_sendMessage=e=>{this.isTargetWindow?this.target.postMessage(e,this.targetOrigin):this.target.postMessage(e)};sendRequest=(e,s,t=1e4)=>this._sendRequest({data:JSON.stringify(s),to:e,from:this.id},t);_sendRequest=(e,s=1e4)=>new Promise(((t,n)=>{let a;const{port1:r,port2:i}=new MessageChannel;r.onmessage=e=>{a&&self.clearTimeout(a),r.close();const s=e.data;s.error?n(s.error):t(s.data)},this.isTargetWindow?this.target.postMessage(e,this.targetOrigin,[i]):this.target.postMessage(e,[i]),s&&(a=self.setTimeout((()=>{n("request timed out")}),s))}))}let d=!1;const g="koinos-wallet-iframe",u="wallet-connector-child";new Promise(((e,s)=>{d?e():["loaded","interactive","complete"].indexOf(document.readyState)>-1?(d=!0,e()):window.addEventListener("load",(()=>{d=!0,e()}),!1)})).then((()=>{document.getElementsByClassName(g).length&&console.warn("Koinos-Wallet script was already loaded. This might cause unexpected behavior. If loading with a <script> tag, please make sure that you only load it once.")})).catch((()=>{}));class m{constructor(e){this.iframe=document.createElement("iframe"),this.iframe.id=g,this.iframe.hidden=!0,this.iframe.onload=()=>this.onIframeLoad(),this.iframe.src=e,document.body.appendChild(this.iframe),m.checkIfAlreadyInitialized()}close(){this.messenger&&this.messenger.removeListener()}async onIframeLoad(){this.messenger=new c(this.iframe.contentWindow,"wallet-connector-parent"),await this.messenger.ping(u),console.log("connected to koinos-wallet-connector")}static checkIfAlreadyInitialized(){document.getElementsByClassName(g).length&&console.warn("An instance of Koinos-Wallet was already initialized. This is probably a mistake. Make sure that you use the same Koinos-Wallet instance throughout your app.")}async getAccounts(e=6e4){const{result:s}=await this.messenger.sendRequest(u,{scope:"accounts",command:"getAccounts"},e);return s}getSigner(e,s=6e4){return i(e,this.messenger,u,s)}getProvider(e=6e4){return r(this.messenger,u,e)}}
+function $parcel$defineInteropFlag(a) {
+  Object.defineProperty(a, '__esModule', {value: true, configurable: true});
+}
+function $parcel$export(e, n, v, s) {
+  Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
+}
+
+$parcel$defineInteropFlag(module.exports);
+
+$parcel$export(module.exports, "default", () => $882b6d93070905b3$export$2e2bcd8739ae039);
+function $e18943e3c35946bf$export$2e2bcd8739ae039(messenger, walletConnectorMessengerId, timeout) {
+    return {
+        async call (method, params) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "call",
+                arguments: JSON.stringify({
+                    method: method,
+                    params: params
+                })
+            }, timeout);
+            return result;
+        },
+        async getNonce (account) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getNonce",
+                arguments: JSON.stringify({
+                    account: account
+                })
+            }, timeout);
+            return result;
+        },
+        async getAccountRc (account) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getAccountRc",
+                arguments: JSON.stringify({
+                    account: account
+                })
+            }, timeout);
+            return result;
+        },
+        async getTransactionsById (transactionIds) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getTransactionsById",
+                arguments: JSON.stringify({
+                    transactionIds: transactionIds
+                })
+            }, timeout);
+            return result;
+        },
+        async getBlocksById (blockIds) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getBlocksById",
+                arguments: JSON.stringify({
+                    blockIds: blockIds
+                })
+            }, timeout);
+            return result;
+        },
+        async getHeadInfo () {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getHeadInfo",
+                arguments: JSON.stringify({})
+            }, timeout);
+            return result;
+        },
+        async getChainId () {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getChainId",
+                arguments: JSON.stringify({})
+            }, timeout);
+            return result;
+        },
+        async getBlocks (height, numBlocks = 1, idRef) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getBlocks",
+                arguments: JSON.stringify({
+                    height: height,
+                    numBlocks: numBlocks,
+                    idRef: idRef
+                })
+            }, timeout);
+            return result;
+        },
+        async getBlock (height) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getBlock",
+                arguments: JSON.stringify({
+                    height: height
+                })
+            }, timeout);
+            return result;
+        },
+        async wait (transactionId, type = "byBlock", waitTimeout = 30000) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "wait",
+                arguments: JSON.stringify({
+                    transactionId: transactionId,
+                    type: type,
+                    timeout: waitTimeout
+                })
+            }, timeout);
+            return result;
+        },
+        async sendTransaction (transaction, broadcast = true) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "sendTransaction",
+                arguments: JSON.stringify({
+                    transaction: transaction,
+                    broadcast: broadcast
+                })
+            }, timeout);
+            result.transaction.wait = async (type = "byBlock", waitTimeout = 60000)=>{
+                const { result: waitResult  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                    scope: "provider",
+                    command: "wait",
+                    arguments: JSON.stringify({
+                        transactionId: transaction.id,
+                        type: type,
+                        timeout: waitTimeout
+                    })
+                }, timeout);
+                return waitResult;
+            };
+            return result;
+        },
+        async readContract (operation) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "readContract",
+                arguments: JSON.stringify({
+                    operation: operation
+                })
+            }, timeout);
+            return result;
+        },
+        async submitBlock (block) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "submitBlock",
+                arguments: JSON.stringify({
+                    block: block
+                })
+            }, timeout);
+            return result;
+        }
+    };
+}
+
+
+function $7371ac622f10d4f8$export$2e2bcd8739ae039(signerAddress, messenger, walletConnectorMessengerId, timeout) {
+    return {
+        getAddress: ()=>signerAddress,
+        getPrivateKey: ()=>{
+            throw new Error("not implemented");
+        },
+        signHash: async (hash)=>{
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "signer",
+                command: "signHash",
+                arguments: JSON.stringify({
+                    signerAddress: signerAddress,
+                    hash: hash
+                })
+            }, timeout);
+            return result;
+        },
+        signMessage: async (message)=>{
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "signer",
+                command: "signMessage",
+                arguments: JSON.stringify({
+                    signerAddress: signerAddress,
+                    message: message
+                })
+            }, timeout);
+            return result;
+        },
+        prepareTransaction: async (transaction)=>{
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "signer",
+                command: "prepareTransaction",
+                arguments: JSON.stringify({
+                    signerAddress: signerAddress,
+                    transaction: transaction
+                })
+            }, timeout);
+            return result;
+        },
+        signTransaction: async (transaction, abis)=>{
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "signer",
+                command: "signTransaction",
+                arguments: JSON.stringify({
+                    signerAddress: signerAddress,
+                    transaction: transaction,
+                    options: {
+                        abis: abis
+                    }
+                })
+            }, timeout);
+            return result;
+        },
+        sendTransaction: async (transaction, options)=>{
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "signer",
+                command: "signAndSendTransaction",
+                arguments: JSON.stringify({
+                    signerAddress: signerAddress,
+                    transaction: transaction,
+                    options: options
+                })
+            }, timeout);
+            result.transaction.wait = async (type = "byBlock", waitTimeout = 60000)=>{
+                const { result: waitResult  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                    scope: "provider",
+                    command: "wait",
+                    arguments: JSON.stringify({
+                        transactionId: result.transaction.id,
+                        type: type,
+                        timeout: waitTimeout
+                    })
+                }, timeout);
+                return waitResult;
+            };
+            return result;
+        },
+        prepareBlock: ()=>{
+            throw new Error("not implemented");
+        },
+        signBlock: ()=>{
+            throw new Error("not implemented");
+        }
+    };
+}
+
+
+const $7854553819392e1e$var$PING_REQUEST_TYPE = "messenger::ping::request";
+const $7854553819392e1e$var$PING_REQUEST_ACK_TYPE = "messenger::ping::ack";
+class $7854553819392e1e$export$1182391b36b9d1bf {
+    constructor(target, id, isTargetWindow = true, targetOrigin = "*"){
+        this.id = id;
+        this.target = target;
+        this.isTargetWindow = isTargetWindow;
+        this.targetOrigin = targetOrigin;
+        this.onMessageListenerAdded = false;
+        this.addMessageListener();
+    }
+    onMessageListener = async (event)=>{
+        if (this.targetOrigin !== "*" && !this.targetOrigin.startsWith(event.origin)) return;
+        const { data: data , ports: ports  } = event;
+        if (data.type !== $7854553819392e1e$var$PING_REQUEST_TYPE && data.to !== this.id) return;
+        if (data && ports && ports[0]) {
+            if (data.type === $7854553819392e1e$var$PING_REQUEST_TYPE) ports[0].postMessage({
+                type: $7854553819392e1e$var$PING_REQUEST_ACK_TYPE
+            });
+            else if (this.onRequestFn) await this.onRequestFn({
+                sender: event.origin,
+                data: JSON.parse(data.data),
+                sendData: (data)=>{
+                    ports[0].postMessage({
+                        data: data
+                    });
+                },
+                sendError: (error)=>{
+                    ports[0].postMessage({
+                        error: error
+                    });
+                }
+            });
+            ports[0].close();
+        } else if (data) {
+            if (this.onMessageFn) this.onMessageFn({
+                sender: event.origin,
+                data: JSON.parse(data.data)
+            });
+        }
+    };
+    addMessageListener = ()=>{
+        if (!this.onMessageListenerAdded) {
+            this.onMessageListenerAdded = true;
+            self.addEventListener("message", this.onMessageListener);
+        }
+    };
+    ping = async (targetId, numberOfAttempt = 20)=>{
+        if (!this.onMessageListenerAdded) throw new Error("ping was cancelled");
+        try {
+            await this._sendRequest({
+                type: $7854553819392e1e$var$PING_REQUEST_TYPE,
+                from: this.id,
+                to: targetId
+            }, 500);
+        } catch (error) {
+            if (--numberOfAttempt <= 0) throw new Error(`could not ping target "${targetId}"`);
+            await this.ping(targetId, numberOfAttempt);
+        }
+    };
+    onMessage = (onMessageFn)=>{
+        this.onMessageFn = onMessageFn;
+    };
+    onRequest = (onRequestFn)=>{
+        this.onRequestFn = onRequestFn;
+    };
+    removeListener = ()=>{
+        if (this.onMessageListenerAdded) {
+            this.onMessageListenerAdded = false;
+            self.removeEventListener("message", this.onMessageListener);
+        }
+    };
+    sendMessage = (targetId, message)=>this._sendMessage({
+            data: JSON.stringify(message),
+            to: targetId,
+            from: this.id
+        });
+    _sendMessage = (message)=>{
+        if (this.isTargetWindow) this.target.postMessage(message, this.targetOrigin);
+        else this.target.postMessage(message);
+    };
+    sendRequest = (targetId, message, timeout = 10000)=>this._sendRequest({
+            data: JSON.stringify(message),
+            to: targetId,
+            from: this.id
+        }, timeout);
+    _sendRequest = (message, timeout = 10000)=>new Promise((resolve, reject)=>{
+            let requestTimeout;
+            const { port1: port1 , port2: port2  } = new MessageChannel();
+            port1.onmessage = (evt)=>{
+                if (requestTimeout) self.clearTimeout(requestTimeout);
+                port1.close();
+                const message = evt.data;
+                if (message.error) reject(message.error);
+                else resolve(message.data);
+            };
+            if (this.isTargetWindow) this.target.postMessage(message, this.targetOrigin, [
+                port2
+            ]);
+            else this.target.postMessage(message, [
+                port2
+            ]);
+            if (timeout) requestTimeout = self.setTimeout(()=>{
+                reject("request timed out");
+            }, timeout);
+        });
+}
+
+
+let $a1277f7c24cac7c7$var$loaded = false;
+function $a1277f7c24cac7c7$export$ed85e297a450c0d2() {
+    return new Promise((resolve, reject)=>{
+        if ($a1277f7c24cac7c7$var$loaded) resolve();
+        else if ([
+            "loaded",
+            "interactive",
+            "complete"
+        ].indexOf(document.readyState) > -1) {
+            $a1277f7c24cac7c7$var$loaded = true;
+            resolve();
+        } else window.addEventListener("load", ()=>{
+            $a1277f7c24cac7c7$var$loaded = true;
+            resolve();
+        }, false);
+    });
+}
+
+
+const $882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS = "koinos-wallet-iframe";
+const $882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID = "wallet-connector-child";
+const $882b6d93070905b3$var$KOINOS_WALLET_MESSENGER_ID = "wallet-connector-parent";
+(0, $a1277f7c24cac7c7$export$ed85e297a450c0d2)().then(()=>{
+    if (document.getElementsByClassName($882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS).length) console.warn("Koinos-Wallet script was already loaded. This might cause unexpected behavior. If loading with a <script> tag, please make sure that you only load it once.");
+})// eslint-disable-next-line @typescript-eslint/no-empty-function
+.catch(()=>{}) // Prevents unhandledPromiseRejectionWarning, which happens when using React SSR;
+;
+class $882b6d93070905b3$export$2e2bcd8739ae039 {
+    constructor(walletUrl){
+        this.iframe = document.createElement("iframe");
+        this.iframe.id = $882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS;
+        this.iframe.hidden = true;
+        this.iframe.onload = ()=>this.onIframeLoad();
+        this.iframe.src = walletUrl;
+        document.body.appendChild(this.iframe);
+        $882b6d93070905b3$export$2e2bcd8739ae039.checkIfAlreadyInitialized();
+    }
+    close() {
+        if (this.messenger) this.messenger.removeListener();
+    }
+    async onIframeLoad() {
+        this.messenger = new (0, $7854553819392e1e$export$1182391b36b9d1bf)(this.iframe.contentWindow, $882b6d93070905b3$var$KOINOS_WALLET_MESSENGER_ID);
+        await this.messenger.ping($882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID);
+        console.log("connected to koinos-wallet-connector");
+    }
+    static checkIfAlreadyInitialized() {
+        if (document.getElementsByClassName($882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS).length) console.warn("An instance of Koinos-Wallet was already initialized. This is probably a mistake. Make sure that you use the same Koinos-Wallet instance throughout your app.");
+    }
+    async getAccounts(timeout = 60000) {
+        const { result: result  } = await this.messenger.sendRequest($882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID, {
+            scope: "accounts",
+            command: "getAccounts"
+        }, timeout);
+        return result;
+    }
+    getSigner(signerAddress, timeout = 60000) {
+        return (0, $7371ac622f10d4f8$export$2e2bcd8739ae039)(signerAddress, this.messenger, $882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID, timeout);
+    }
+    getProvider(timeout = 60000) {
+        return (0, $e18943e3c35946bf$export$2e2bcd8739ae039)(this.messenger, $882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID, timeout);
+    }
+}
+
+
 //# sourceMappingURL=koinos-wallet.js.map
