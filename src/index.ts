@@ -25,7 +25,6 @@ export default class KoinosWallet {
     this.iframe = document.createElement('iframe')
     this.iframe.id = KOINOS_WALLET_IFRAME_CLASS
     this.iframe.hidden = true
-    this.iframe.onload = () => this.onIframeLoad()
     this.iframe.src = walletUrl
     document.body.appendChild(this.iframe)
 
@@ -40,11 +39,10 @@ export default class KoinosWallet {
     this.iframe.remove()
   }
 
-  async onIframeLoad() {
+  async connect() {
     this.messenger = new Messenger<IncomingMessage, OutgoingMessage>(this.iframe.contentWindow as Window, KOINOS_WALLET_MESSENGER_ID)
 
     await this.messenger.ping(WALLET_CONNECTOR_MESSENGER_ID)
-    console.log('connected to koinos-wallet-connector')
   }
 
   private static checkIfAlreadyInitialized() {

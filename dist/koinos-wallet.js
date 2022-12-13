@@ -386,7 +386,6 @@ class $882b6d93070905b3$export$2e2bcd8739ae039 {
         this.iframe = document.createElement("iframe");
         this.iframe.id = $882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS;
         this.iframe.hidden = true;
-        this.iframe.onload = ()=>this.onIframeLoad();
         this.iframe.src = walletUrl;
         document.body.appendChild(this.iframe);
         $882b6d93070905b3$export$2e2bcd8739ae039.checkIfAlreadyInitialized();
@@ -395,10 +394,9 @@ class $882b6d93070905b3$export$2e2bcd8739ae039 {
         if (this.messenger) this.messenger.removeListener();
         this.iframe.remove();
     }
-    async onIframeLoad() {
+    async connect() {
         this.messenger = new (0, $7854553819392e1e$export$1182391b36b9d1bf)(this.iframe.contentWindow, $882b6d93070905b3$var$KOINOS_WALLET_MESSENGER_ID);
         await this.messenger.ping($882b6d93070905b3$var$WALLET_CONNECTOR_MESSENGER_ID);
-        console.log("connected to koinos-wallet-connector");
     }
     static checkIfAlreadyInitialized() {
         if (document.getElementsByClassName($882b6d93070905b3$var$KOINOS_WALLET_IFRAME_CLASS).length) console.warn("An instance of Koinos-Wallet was already initialized. This is probably a mistake. Make sure that you use the same Koinos-Wallet instance throughout your app.");
