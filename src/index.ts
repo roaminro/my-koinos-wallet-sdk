@@ -43,6 +43,8 @@ export default class KoinosWallet {
   }
 
   async connect() {
+    console.log('this.iframe.contentWindow2', this.iframe.contentWindow)
+
     if (!this.iframeLoaded) {
       throw new Error('Koinos-Wallet is not loaded yet')
     }

@@ -388,6 +388,7 @@ class $149c1bd638913645$export$2e2bcd8739ae039 {
         this.iframe.remove();
     }
     async connect() {
+        console.log("this.iframe.contentWindow2", this.iframe.contentWindow);
         if (!this.iframeLoaded) throw new Error("Koinos-Wallet is not loaded yet");
         this.messenger = new (0, $3f9c4e83cf9b9888$export$1182391b36b9d1bf)(this.iframe.contentWindow, $149c1bd638913645$var$KOINOS_WALLET_MESSENGER_ID);
         try {
