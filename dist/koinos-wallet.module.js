@@ -386,7 +386,13 @@ class $149c1bd638913645$export$2e2bcd8739ae039 {
     }
     async connect() {
         this.messenger = new (0, $3f9c4e83cf9b9888$export$1182391b36b9d1bf)(this.iframe.contentWindow, $149c1bd638913645$var$KOINOS_WALLET_MESSENGER_ID);
-        await this.messenger.ping($149c1bd638913645$var$WALLET_CONNECTOR_MESSENGER_ID);
+        try {
+            await this.messenger.ping($149c1bd638913645$var$WALLET_CONNECTOR_MESSENGER_ID);
+            return true;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     }
     static checkIfAlreadyInitialized() {
         if (document.getElementsByClassName($149c1bd638913645$var$KOINOS_WALLET_IFRAME_CLASS).length) console.warn("An instance of Koinos-Wallet was already initialized. This is probably a mistake. Make sure that you use the same Koinos-Wallet instance throughout your app.");

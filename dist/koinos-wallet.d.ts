@@ -7,7 +7,7 @@ interface Account {
 export default class KoinosWallet {
     constructor(walletUrl: string);
     close(): void;
-    connect(): Promise<void>;
+    connect(): Promise<boolean>;
     getAccounts(timeout?: number): Promise<Account[]>;
     getSigner(signerAddress: string, timeout?: number): import("koilib").SignerInterface;
     getProvider(timeout?: number): {

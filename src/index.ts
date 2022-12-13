@@ -42,7 +42,14 @@ export default class KoinosWallet {
   async connect() {
     this.messenger = new Messenger<IncomingMessage, OutgoingMessage>(this.iframe.contentWindow as Window, KOINOS_WALLET_MESSENGER_ID)
 
-    await this.messenger.ping(WALLET_CONNECTOR_MESSENGER_ID)
+    try {
+      await this.messenger.ping(WALLET_CONNECTOR_MESSENGER_ID)
+      
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   }
 
   private static checkIfAlreadyInitialized() {
