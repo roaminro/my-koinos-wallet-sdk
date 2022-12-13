@@ -36,6 +36,8 @@ export default class KoinosWallet {
     if (this.messenger) {
       this.messenger.removeListener()
     }
+
+    this.iframe.remove()
   }
 
   async onIframeLoad() {

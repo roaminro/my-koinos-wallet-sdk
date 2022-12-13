@@ -393,6 +393,7 @@ class $882b6d93070905b3$export$2e2bcd8739ae039 {
     }
     close() {
         if (this.messenger) this.messenger.removeListener();
+        this.iframe.remove();
     }
     async onIframeLoad() {
         this.messenger = new (0, $7854553819392e1e$export$1182391b36b9d1bf)(this.iframe.contentWindow, $882b6d93070905b3$var$KOINOS_WALLET_MESSENGER_ID);
