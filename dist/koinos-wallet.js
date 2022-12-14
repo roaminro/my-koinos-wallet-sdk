@@ -209,7 +209,7 @@ function $7371ac622f10d4f8$export$2e2bcd8739ae039(signerAddress, messenger, wall
                     }
                 })
             }, timeout);
-            return result;
+            return result.transaction;
         },
         sendTransaction: async (transaction, options)=>{
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {

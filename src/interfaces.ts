@@ -19,7 +19,7 @@ export interface SignSendTransactionArguments {
 }
 
 export interface SignSendTransactionResult {
-  receipt: TransactionReceipt
+  receipt?: TransactionReceipt
   transaction: TransactionJson
 }
 

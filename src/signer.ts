@@ -1,10 +1,10 @@
-import { SignerInterface } from 'koilib'
+import { Signer } from 'koilib'
 import {
   BlockJson,
   SendTransactionOptions,
   TransactionJson,
 } from 'koilib/lib/interface'
-import { IncomingMessage, OutgoingMessage, TransactionResult } from './interfaces'
+import { IncomingMessage, OutgoingMessage, SignSendTransactionResult, TransactionResult } from './interfaces'
 import { Messenger } from './util/Messenger'
 
 export default function generateSigner(
@@ -12,7 +12,7 @@ export default function generateSigner(
   messenger: Messenger<IncomingMessage, OutgoingMessage>,
   walletConnectorMessengerId: string,
   timeout: number
-): SignerInterface {
+): Signer {
   return {
     getAddress: () => signerAddress,
 
@@ -77,7 +77,7 @@ export default function generateSigner(
         })
       }, timeout)
 
-      return result as TransactionJson
+      return (result as SignSendTransactionResult).transaction
     },
 
     sendTransaction: async (
@@ -122,5 +122,5 @@ export default function generateSigner(
     signBlock: (): Promise<BlockJson> => {
       throw new Error('not implemented')
     },
-  }
+  } as unknown as Signer
 }

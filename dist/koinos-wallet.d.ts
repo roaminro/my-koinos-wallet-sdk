@@ -9,7 +9,7 @@ export default class KoinosWallet {
     close(): void;
     connect(): Promise<boolean>;
     getAccounts(timeout?: number): Promise<Account[]>;
-    getSigner(signerAddress: string, timeout?: number): import("koilib").SignerInterface;
+    getSigner(signerAddress: string, timeout?: number): import("koilib").Signer;
     getProvider(timeout?: number): {
         call<T = unknown>(method: string, params: unknown): Promise<T>;
         getNonce(account: string): Promise<number>;

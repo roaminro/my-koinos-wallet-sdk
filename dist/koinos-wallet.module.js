@@ -199,7 +199,7 @@ function $1f2f668e7c4cf993$export$2e2bcd8739ae039(signerAddress, messenger, wall
                     }
                 })
             }, timeout);
-            return result;
+            return result.transaction;
         },
         sendTransaction: async (transaction, options)=>{
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
