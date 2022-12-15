@@ -4,31 +4,31 @@ import generateSigner from './signer'
 import { Messenger } from './util/Messenger'
 import { onWindowLoad } from './util/onWindowLoad'
 
-const KOINOS_WALLET_IFRAME_CLASS = 'koinos-wallet-iframe'
-const WALLET_CONNECTOR_MESSENGER_ID = 'wallet-connector-child'
-const KOINOS_WALLET_MESSENGER_ID = 'wallet-connector-parent'
+const MY_KOINOS_WALLET_IFRAME_CLASS = 'my-koinos-wallet-iframe'
+const MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID = 'my-koinos-wallet-connector-child'
+const MY_KOINOS_WALLET_MESSENGER_ID = 'my-koinos-wallet-connector-parent'
 
 onWindowLoad()
   .then(() => {
-    if (document.getElementsByClassName(KOINOS_WALLET_IFRAME_CLASS).length) {
-      console.warn('Koinos-Wallet script was already loaded. This might cause unexpected behavior. If loading with a <script> tag, please make sure that you only load it once.')
+    if (document.getElementsByClassName(MY_KOINOS_WALLET_IFRAME_CLASS).length) {
+      console.warn('My Koinos Wallet script was already loaded. This might cause unexpected behavior. If loading with a <script> tag, please make sure that you only load it once.')
     }
   })
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   .catch(() => { }) // Prevents unhandledPromiseRejectionWarning, which happens when using React SSR;
 
-export default class KoinosWallet {
+export default class MyKoinosWallet {
   private messenger: Messenger<IncomingMessage, OutgoingMessage>
   private iframe: HTMLIFrameElement
 
   constructor(walletUrl: string) {
     this.iframe = document.createElement('iframe')
-    this.iframe.className = KOINOS_WALLET_IFRAME_CLASS
+    this.iframe.className = MY_KOINOS_WALLET_IFRAME_CLASS
     this.iframe.hidden = true
     this.iframe.src = walletUrl
     document.body.appendChild(this.iframe)
 
-    KoinosWallet.checkIfAlreadyInitialized()
+    MyKoinosWallet.checkIfAlreadyInitialized()
   }
 
   close() {
@@ -44,10 +44,10 @@ export default class KoinosWallet {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
 
-    this.messenger = new Messenger<IncomingMessage, OutgoingMessage>(this.iframe.contentWindow as Window, KOINOS_WALLET_MESSENGER_ID)
+    this.messenger = new Messenger<IncomingMessage, OutgoingMessage>(this.iframe.contentWindow as Window, MY_KOINOS_WALLET_MESSENGER_ID)
 
     try {
-      await this.messenger.ping(WALLET_CONNECTOR_MESSENGER_ID)
+      await this.messenger.ping(MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID)
       
       return true
     } catch (error) {
@@ -57,7 +57,7 @@ export default class KoinosWallet {
   }
 
   private static checkIfAlreadyInitialized() {
-    if (document.getElementsByClassName(KOINOS_WALLET_IFRAME_CLASS).length) {
+    if (document.getElementsByClassName(MY_KOINOS_WALLET_IFRAME_CLASS).length) {
       console.warn(
         'An instance of Koinos-Wallet was already initialized. This is probably a mistake. Make sure that you use the same Koinos-Wallet instance throughout your app.',
       )
@@ -69,7 +69,7 @@ export default class KoinosWallet {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
   
-    const { result } = await this.messenger.sendRequest(WALLET_CONNECTOR_MESSENGER_ID, {
+    const { result } = await this.messenger.sendRequest(MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID, {
       scope: 'accounts',
       command: 'getAccounts'
     }, timeout)
@@ -82,7 +82,7 @@ export default class KoinosWallet {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
 
-    return generateSigner(signerAddress, this.messenger, WALLET_CONNECTOR_MESSENGER_ID, timeout)
+    return generateSigner(signerAddress, this.messenger, MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID, timeout)
   }
 
   getProvider(timeout: number = 60000) {
@@ -90,6 +90,6 @@ export default class KoinosWallet {
       throw new Error('Koinos-Wallet is not loaded yet')
     }
 
-    return generateProvider(this.messenger, WALLET_CONNECTOR_MESSENGER_ID, timeout)
+    return generateProvider(this.messenger, MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID, timeout)
   }
 }

@@ -4,7 +4,7 @@ interface Account {
         address: string;
     }[];
 }
-export default class KoinosWallet {
+export default class MyKoinosWallet {
     constructor(walletUrl: string);
     close(): void;
     connect(): Promise<boolean>;
@@ -65,4 +65,4 @@ export default class KoinosWallet {
     };
 }
 
-//# sourceMappingURL=koinos-wallet.d.ts.map
+//# sourceMappingURL=my-koinos-wallet-sdk.d.ts.map
