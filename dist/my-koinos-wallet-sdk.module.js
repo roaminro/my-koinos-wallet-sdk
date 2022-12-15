@@ -364,8 +364,8 @@ function $bcd145d7a625ed8b$export$ed85e297a450c0d2() {
 
 
 const $149c1bd638913645$var$MY_KOINOS_WALLET_IFRAME_CLASS = "my-koinos-wallet-iframe";
-const $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID = "my-koinos-wallet-connector-child";
-const $149c1bd638913645$var$MY_KOINOS_WALLET_MESSENGER_ID = "my-koinos-wallet-connector-parent";
+const $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID = "my-koinos-wallet-connector-child";
+const $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_PARENT_MESSENGER_ID = "my-koinos-wallet-connector-parent";
 (0, $bcd145d7a625ed8b$export$ed85e297a450c0d2)().then(()=>{
     if (document.getElementsByClassName($149c1bd638913645$var$MY_KOINOS_WALLET_IFRAME_CLASS).length) console.warn("My Koinos Wallet script was already loaded. This might cause unexpected behavior. If loading with a <script> tag, please make sure that you only load it once.");
 })// eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -385,10 +385,10 @@ class $149c1bd638913645$export$2e2bcd8739ae039 {
         this.iframe.remove();
     }
     async connect() {
-        if (!this.iframe.contentWindow) throw new Error("Koinos-Wallet is not loaded yet");
-        this.messenger = new (0, $3f9c4e83cf9b9888$export$1182391b36b9d1bf)(this.iframe.contentWindow, $149c1bd638913645$var$MY_KOINOS_WALLET_MESSENGER_ID);
+        if (!this.iframe.contentWindow) throw new Error("My Koinos Wallet is not loaded yet");
+        this.messenger = new (0, $3f9c4e83cf9b9888$export$1182391b36b9d1bf)(this.iframe.contentWindow, $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_PARENT_MESSENGER_ID);
         try {
-            await this.messenger.ping($149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID);
+            await this.messenger.ping($149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID);
             return true;
         } catch (error) {
             console.log(error);
@@ -396,23 +396,23 @@ class $149c1bd638913645$export$2e2bcd8739ae039 {
         }
     }
     static checkIfAlreadyInitialized() {
-        if (document.getElementsByClassName($149c1bd638913645$var$MY_KOINOS_WALLET_IFRAME_CLASS).length) console.warn("An instance of Koinos-Wallet was already initialized. This is probably a mistake. Make sure that you use the same Koinos-Wallet instance throughout your app.");
+        if (document.getElementsByClassName($149c1bd638913645$var$MY_KOINOS_WALLET_IFRAME_CLASS).length) console.warn("An instance of My Koinos Wallet was already initialized. This is probably a mistake. Make sure that you use the same My KoinosWallet instance throughout your app.");
     }
     async getAccounts(timeout = 60000) {
-        if (!this.iframe.contentWindow) throw new Error("Koinos-Wallet is not loaded yet");
-        const { result: result  } = await this.messenger.sendRequest($149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID, {
+        if (!this.iframe.contentWindow) throw new Error("My Koinos Wallet is not loaded yet");
+        const { result: result  } = await this.messenger.sendRequest($149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID, {
             scope: "accounts",
             command: "getAccounts"
         }, timeout);
         return result;
     }
     getSigner(signerAddress, timeout = 60000) {
-        if (!this.iframe.contentWindow) throw new Error("Koinos-Wallet is not loaded yet");
-        return (0, $1f2f668e7c4cf993$export$2e2bcd8739ae039)(signerAddress, this.messenger, $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID, timeout);
+        if (!this.iframe.contentWindow) throw new Error("My Koinos Wallet is not loaded yet");
+        return (0, $1f2f668e7c4cf993$export$2e2bcd8739ae039)(signerAddress, this.messenger, $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID, timeout);
     }
     getProvider(timeout = 60000) {
-        if (!this.iframe.contentWindow) throw new Error("Koinos-Wallet is not loaded yet");
-        return (0, $cf9e29f94c1aaec2$export$2e2bcd8739ae039)(this.messenger, $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_MESSENGER_ID, timeout);
+        if (!this.iframe.contentWindow) throw new Error("My Koinos Wallet is not loaded yet");
+        return (0, $cf9e29f94c1aaec2$export$2e2bcd8739ae039)(this.messenger, $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID, timeout);
     }
 }
 
