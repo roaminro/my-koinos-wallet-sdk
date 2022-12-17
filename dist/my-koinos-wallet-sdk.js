@@ -31,6 +31,16 @@ function $e18943e3c35946bf$export$2e2bcd8739ae039(messenger, walletConnectorMess
             }, timeout);
             return result;
         },
+        async getNextNonce (account) {
+            const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
+                scope: "provider",
+                command: "getNextNonce",
+                arguments: JSON.stringify({
+                    account: account
+                })
+            }, timeout);
+            return result;
+        },
         async getAccountRc (account) {
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
                 scope: "provider",

@@ -1,3 +1,4 @@
+import { Provider } from 'koilib'
 import {
   BlockJson,
   CallContractOperationJson,
@@ -10,7 +11,7 @@ export default function generateProvider(
   messenger: Messenger<IncomingMessage, OutgoingMessage>,
   walletConnectorMessengerId: string,
   timeout: number
-) {
+): Provider {
 
   return {
     async call<T = unknown>(method: string, params: unknown): Promise<T> {
@@ -40,6 +41,19 @@ export default function generateProvider(
       return result as number
     },
 
+    async getNextNonce(account: string): Promise<string> {
+      const { result } = await messenger.sendRequest(walletConnectorMessengerId, {
+        scope: 'provider',
+        command: 'getNextNonce',
+        arguments: JSON.stringify({
+          account
+        })
+      }, timeout)
+
+
+      return result as string
+    },
+
     async getAccountRc(account: string): Promise<string> {
       const { result } = await messenger.sendRequest(walletConnectorMessengerId, {
         scope: 'provider',
@@ -55,7 +69,7 @@ export default function generateProvider(
 
     async getTransactionsById(transactionIds: string[]): Promise<{
       transactions: {
-        transaction: TransactionJson[];
+        transaction: TransactionJson;
         containing_blocks: string[];
       }[];
     }> {
@@ -70,7 +84,7 @@ export default function generateProvider(
 
       return result as {
         transactions: {
-          transaction: TransactionJson[];
+          transaction: TransactionJson;
           containing_blocks: string[];
         }[];
       }
@@ -102,11 +116,13 @@ export default function generateProvider(
     },
 
     async getHeadInfo(): Promise<{
+      head_block_time: string;
       head_topology: {
         id: string;
         height: string;
         previous: string;
       };
+      head_state_merkle_root: string;
       last_irreversible_block: string;
     }> {
       const { result } = await messenger.sendRequest(walletConnectorMessengerId, {
@@ -118,11 +134,13 @@ export default function generateProvider(
       }, timeout)
 
       return result as {
+        head_block_time: string;
         head_topology: {
           id: string;
           height: string;
           previous: string;
         };
+        head_state_merkle_root: string;
         last_irreversible_block: string;
       }
     },
@@ -281,5 +299,5 @@ export default function generateProvider(
 
       return result as Record<string, never>
     },
-  }
+  } as Provider
 }
