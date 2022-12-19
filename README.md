@@ -38,11 +38,11 @@ import { Contract, utils } from "koilib"
   const koin = koinContract.functions;
 
   // Get balance
-  const { result } = await koin.balanceOf({
+  const { result: { value } } = await koin.balanceOf({
     owner: accounts[0].address,
   });
 
-  console.log(`Balance of account ${accounts[0].address} is ${utils.formatUnits(result, 8)} Koin`);
+  console.log(`Balance of account ${accounts[0].address} is ${utils.formatUnits(value, 8)} Koin`);
 })();
 ```
 
@@ -52,7 +52,7 @@ import { Contract, utils } from "koilib"
 <html>
 <script src="https://cdn.jsdelivr.net/gh/joticajulian/koilib@latest/dist/koinos.js"></script>
 <script type="module">
-  import KoinosWallet from 'https://cdn.jsdelivr.net/gh/roaminro/my-koinos-wallet-sdk@latest/dist/my-koinos-wallet-sdk.module.js'
+  import MyKoinosWallet from 'https://cdn.jsdelivr.net/gh/roaminro/my-koinos-wallet-sdk@latest/dist/my-koinos-wallet-sdk.module.js'
 
   const walletConnectorUrl = 'https://my-koinos-wallet.vercel.app/embed/wallet-connector'
 
@@ -73,11 +73,11 @@ import { Contract, utils } from "koilib"
   const koin = koinContract.functions;
 
   // Get balance
-  const { result } = await koin.balanceOf({
+  const { result: { value } } = await koin.balanceOf({
     owner: accounts[0].address,
   });
 
-  console.log(`Balance of account ${accounts[0].address} is ${utils.formatUnits(result, 8)} Koin`);
+  console.log(`Balance of account ${accounts[0].address} is ${utils.formatUnits(value, 8)} Koin`);
 </script>
 </html>
 ```
