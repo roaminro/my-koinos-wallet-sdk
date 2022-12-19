@@ -12,7 +12,7 @@ npm install -g @roamin/my-koinos-wallet-sdk
 yarn global add @roamin/my-koinos-wallet-sdk
 ```
 
-### Using a frontend library (React, Vue, etc...)
+### Using as a CommonJS library (React, Vue, etc...)
 
 ```ts
 import MyKoinosWallet from '@roamin/my-koinos-wallet-sdk'
