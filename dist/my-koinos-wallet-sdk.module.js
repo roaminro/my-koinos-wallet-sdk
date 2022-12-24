@@ -158,8 +158,10 @@ function $cf9e29f94c1aaec2$export$2e2bcd8739ae039(messenger, walletConnectorMess
 }
 
 
+
 function $1f2f668e7c4cf993$export$2e2bcd8739ae039(signerAddress, messenger, walletConnectorMessengerId, timeout) {
     return {
+        provider: (0, $cf9e29f94c1aaec2$export$2e2bcd8739ae039)(messenger, walletConnectorMessengerId, timeout),
         getAddress: ()=>signerAddress,
         getPrivateKey: ()=>{
             throw new Error("not implemented");

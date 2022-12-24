@@ -5,6 +5,7 @@ import {
   TransactionJson,
 } from 'koilib/lib/interface'
 import { IncomingMessage, OutgoingMessage, SignSendTransactionResult, TransactionResult } from './interfaces'
+import generateProvider from './provider'
 import { Messenger } from './util/Messenger'
 
 export default function generateSigner(
@@ -13,7 +14,9 @@ export default function generateSigner(
   walletConnectorMessengerId: string,
   timeout: number
 ): Signer {
-  return {
+  return {    
+    provider: generateProvider(messenger, walletConnectorMessengerId, timeout),
+
     getAddress: () => signerAddress,
 
     getPrivateKey: (): string => {
