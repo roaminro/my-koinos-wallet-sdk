@@ -115,6 +115,7 @@ import { Contract, utils } from "koilib"
   const acceptedPermissions = await mkw.requestPermissions({
     'accounts': ['getAccounts'],
     'signer': ['prepareTransaction', 'signAndSendTransaction'],
+    'provider': ['wait']
   })
 
   const accounts = await mkw.getAccounts()
@@ -161,6 +162,7 @@ import { Contract, utils } from "koilib"
   const acceptedPermissions = await mkw.requestPermissions({
     'accounts': ['getAccounts'],
     'signer': ['prepareTransaction', 'signAndSendTransaction'],
+    'provider': ['wait']
   })
 
   const accounts = await mkw.getAccounts()
