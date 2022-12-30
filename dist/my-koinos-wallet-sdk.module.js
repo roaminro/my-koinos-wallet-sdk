@@ -418,6 +418,17 @@ class $149c1bd638913645$export$2e2bcd8739ae039 {
         }, timeout);
         return result;
     }
+    async requestPermissions(permissions, timeout = 60000) {
+        if (!this.iframe.contentWindow) throw new Error("My Koinos Wallet is not loaded yet");
+        const { result: result  } = await this.messenger.sendRequest($149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID, {
+            scope: "permissions",
+            command: "requestPermissions",
+            arguments: JSON.stringify({
+                permissions: permissions
+            })
+        }, timeout);
+        return result;
+    }
     getSigner(signerAddress, timeout = 60000) {
         if (!this.iframe.contentWindow) throw new Error("My Koinos Wallet is not loaded yet");
         return (0, $1f2f668e7c4cf993$export$2e2bcd8739ae039)(signerAddress, this.messenger, $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID, timeout);

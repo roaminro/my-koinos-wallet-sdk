@@ -1,4 +1,4 @@
-import { IncomingMessage, OutgoingMessage, Account } from './interfaces'
+import { IncomingMessage, OutgoingMessage, Account, Permissions } from './interfaces'
 import generateProvider from './provider'
 import generateSigner from './signer'
 import { Messenger } from './util/Messenger'
@@ -75,6 +75,22 @@ export default class MyKoinosWallet {
     }, timeout)
 
     return result as Account[]
+  }
+
+  async requestPermissions(permissions: Permissions, timeout = 60000) {
+    if (!this.iframe.contentWindow) {
+      throw new Error('My Koinos Wallet is not loaded yet')
+    }
+  
+    const { result } = await this.messenger.sendRequest(MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID, {
+      scope: 'permissions',
+      command: 'requestPermissions',
+      arguments: JSON.stringify({
+        permissions
+      })
+    }, timeout)
+
+    return result as Permissions
   }
 
   getSigner(signerAddress: string, timeout: number = 60000) {

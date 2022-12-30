@@ -34,3 +34,7 @@ export interface TransactionResult {
   receipt: TransactionReceipt
   transaction: TransactionJsonWait
 }
+
+export type Scope = string
+export type Command = string
+export type Permissions = Record<Scope, Command[]>
