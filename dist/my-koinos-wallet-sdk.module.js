@@ -379,18 +379,18 @@ const $149c1bd638913645$var$MY_KOINOS_WALLET_IFRAME_CLASS = "my-koinos-wallet-if
 const $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_CHILD_MESSENGER_ID = "my-koinos-wallet-connector-child";
 const $149c1bd638913645$var$MY_KOINOS_WALLET_CONNECTOR_PARENT_MESSENGER_ID = "my-koinos-wallet-connector-parent";
 (0, $bcd145d7a625ed8b$export$ed85e297a450c0d2)().then(()=>{
-    if (document.getElementsByClassName($149c1bd638913645$var$MY_KOINOS_WALLET_IFRAME_CLASS).length) console.warn("My Koinos Wallet script was already loaded. This might cause unexpected behavior. If loading with a <script> tag, please make sure that you only load it once.");
+    if (document.getElementsByClassName($149c1bd638913645$var$MY_KOINOS_WALLET_IFRAME_CLASS).length > 1) console.warn("My Koinos Wallet script was already loaded. This might cause unexpected behavior. If loading with a <script> tag, please make sure that you only load it once.");
 })// eslint-disable-next-line @typescript-eslint/no-empty-function
 .catch(()=>{}) // Prevents unhandledPromiseRejectionWarning, which happens when using React SSR;
 ;
 class $149c1bd638913645$export$2e2bcd8739ae039 {
     constructor(walletUrl){
+        $149c1bd638913645$export$2e2bcd8739ae039.checkIfAlreadyInitialized();
         this.iframe = document.createElement("iframe");
         this.iframe.className = $149c1bd638913645$var$MY_KOINOS_WALLET_IFRAME_CLASS;
         this.iframe.hidden = true;
         this.iframe.src = walletUrl;
         document.body.appendChild(this.iframe);
-        $149c1bd638913645$export$2e2bcd8739ae039.checkIfAlreadyInitialized();
     }
     close() {
         if (this.messenger) this.messenger.removeListener();

@@ -10,7 +10,7 @@ const MY_KOINOS_WALLET_CONNECTOR_PARENT_MESSENGER_ID = 'my-koinos-wallet-connect
 
 onWindowLoad()
   .then(() => {
-    if (document.getElementsByClassName(MY_KOINOS_WALLET_IFRAME_CLASS).length) {
+    if (document.getElementsByClassName(MY_KOINOS_WALLET_IFRAME_CLASS).length > 1) {
       console.warn('My Koinos Wallet script was already loaded. This might cause unexpected behavior. If loading with a <script> tag, please make sure that you only load it once.')
     }
   })
@@ -22,13 +22,13 @@ export default class MyKoinosWallet {
   private iframe: HTMLIFrameElement
 
   constructor(walletUrl: string) {
+    MyKoinosWallet.checkIfAlreadyInitialized()
+
     this.iframe = document.createElement('iframe')
     this.iframe.className = MY_KOINOS_WALLET_IFRAME_CLASS
     this.iframe.hidden = true
     this.iframe.src = walletUrl
     document.body.appendChild(this.iframe)
-
-    MyKoinosWallet.checkIfAlreadyInitialized()
   }
 
   close() {
