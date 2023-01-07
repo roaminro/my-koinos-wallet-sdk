@@ -170,12 +170,12 @@ function $e18943e3c35946bf$export$2e2bcd8739ae039(messenger, walletConnectorMess
 
 
 function $84bf14fbbdac9746$export$4d7c1d4e1df91ff5(byteArray) {
-    return btoa(Array.from(new Uint8Array(byteArray)).map((val)=>{
+    return window.btoa(Array.from(new Uint8Array(byteArray)).map((val)=>{
         return String.fromCharCode(val);
     }).join("")).replace(/\+/g, "-").replace(/\//g, "_").replace(/\\=/g, "");
 }
 function $84bf14fbbdac9746$export$91d6fadaa95edc0b(b64urlstring) {
-    return new Uint8Array(atob(b64urlstring.replace(/-/g, "+").replace(/_/g, "/")).split("").map((val)=>{
+    return new Uint8Array(window.atob(b64urlstring.replace(/-/g, "+").replace(/_/g, "/")).split("").map((val)=>{
         return val.charCodeAt(0);
     }));
 }
