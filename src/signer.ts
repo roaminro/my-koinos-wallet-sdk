@@ -1,4 +1,4 @@
-import { Signer, utils } from 'koilib'
+import { Signer } from 'koilib'
 import {
   BlockJson,
   SendTransactionOptions,
@@ -6,6 +6,7 @@ import {
 } from 'koilib/lib/interface'
 import { IncomingMessage, OutgoingMessage, SignSendTransactionResult, TransactionResult } from './interfaces'
 import generateProvider from './provider'
+import { base64DecodeURL, base64EncodeURL } from './util/Base64'
 import { Messenger } from './util/Messenger'
 
 export default function generateSigner(
@@ -14,7 +15,7 @@ export default function generateSigner(
   walletConnectorMessengerId: string,
   timeout: number
 ): Signer {
-  return {    
+  return {
     provider: generateProvider(messenger, walletConnectorMessengerId, timeout),
 
     getAddress: () => signerAddress,
@@ -29,14 +30,14 @@ export default function generateSigner(
         command: 'signHash',
         arguments: JSON.stringify({
           signerAddress,
-          hash,
+          hash: base64EncodeURL(hash),
         })
       }, timeout)
 
-      return utils.decodeBase64url(result as string)
+      return base64DecodeURL(result as string)
     },
 
-    signMessage: async (message: string | Uint8Array): Promise<Uint8Array> => {
+    signMessage: async (message: string): Promise<Uint8Array> => {
       const { result } = await messenger.sendRequest(walletConnectorMessengerId, {
         scope: 'signer',
         command: 'signMessage',
@@ -46,7 +47,7 @@ export default function generateSigner(
         })
       }, timeout)
 
-      return utils.decodeBase64url(result as string)
+      return base64DecodeURL(result as string)
     },
 
     prepareTransaction: async (

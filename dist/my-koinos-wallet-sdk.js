@@ -1,5 +1,3 @@
-var $8zHUo$koilib = require("koilib");
-
 function $parcel$defineInteropFlag(a) {
   Object.defineProperty(a, '__esModule', {value: true, configurable: true});
 }
@@ -171,6 +169,17 @@ function $e18943e3c35946bf$export$2e2bcd8739ae039(messenger, walletConnectorMess
 
 
 
+function $84bf14fbbdac9746$export$4d7c1d4e1df91ff5(byteArray) {
+    return btoa(Array.from(new Uint8Array(byteArray)).map((val)=>{
+        return String.fromCharCode(val);
+    }).join("")).replace(/\+/g, "-").replace(/\//g, "_").replace(/\\=/g, "");
+}
+function $84bf14fbbdac9746$export$91d6fadaa95edc0b(b64urlstring) {
+    return new Uint8Array(window.atob(b64urlstring.replace(/-/g, "+").replace(/_/g, "/")).split("").map((val)=>{
+        return val.charCodeAt(0);
+    }));
+}
+
 
 function $7371ac622f10d4f8$export$2e2bcd8739ae039(signerAddress, messenger, walletConnectorMessengerId, timeout) {
     return {
@@ -185,10 +194,10 @@ function $7371ac622f10d4f8$export$2e2bcd8739ae039(signerAddress, messenger, wall
                 command: "signHash",
                 arguments: JSON.stringify({
                     signerAddress: signerAddress,
-                    hash: hash
+                    hash: (0, $84bf14fbbdac9746$export$4d7c1d4e1df91ff5)(hash)
                 })
             }, timeout);
-            return (0, $8zHUo$koilib.utils).decodeBase64url(result);
+            return (0, $84bf14fbbdac9746$export$91d6fadaa95edc0b)(result);
         },
         signMessage: async (message)=>{
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
@@ -199,7 +208,7 @@ function $7371ac622f10d4f8$export$2e2bcd8739ae039(signerAddress, messenger, wall
                     message: message
                 })
             }, timeout);
-            return (0, $8zHUo$koilib.utils).decodeBase64url(result);
+            return (0, $84bf14fbbdac9746$export$91d6fadaa95edc0b)(result);
         },
         prepareTransaction: async (transaction)=>{
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {

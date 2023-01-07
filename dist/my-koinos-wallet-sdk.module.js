@@ -1,5 +1,3 @@
-import {utils as $hgUW1$utils} from "koilib";
-
 function $cf9e29f94c1aaec2$export$2e2bcd8739ae039(messenger, walletConnectorMessengerId, timeout) {
     return {
         async call (method, params) {
@@ -161,6 +159,17 @@ function $cf9e29f94c1aaec2$export$2e2bcd8739ae039(messenger, walletConnectorMess
 
 
 
+function $639a17f1d150b861$export$4d7c1d4e1df91ff5(byteArray) {
+    return btoa(Array.from(new Uint8Array(byteArray)).map((val)=>{
+        return String.fromCharCode(val);
+    }).join("")).replace(/\+/g, "-").replace(/\//g, "_").replace(/\\=/g, "");
+}
+function $639a17f1d150b861$export$91d6fadaa95edc0b(b64urlstring) {
+    return new Uint8Array(window.atob(b64urlstring.replace(/-/g, "+").replace(/_/g, "/")).split("").map((val)=>{
+        return val.charCodeAt(0);
+    }));
+}
+
 
 function $1f2f668e7c4cf993$export$2e2bcd8739ae039(signerAddress, messenger, walletConnectorMessengerId, timeout) {
     return {
@@ -175,10 +184,10 @@ function $1f2f668e7c4cf993$export$2e2bcd8739ae039(signerAddress, messenger, wall
                 command: "signHash",
                 arguments: JSON.stringify({
                     signerAddress: signerAddress,
-                    hash: hash
+                    hash: (0, $639a17f1d150b861$export$4d7c1d4e1df91ff5)(hash)
                 })
             }, timeout);
-            return (0, $hgUW1$utils).decodeBase64url(result);
+            return (0, $639a17f1d150b861$export$91d6fadaa95edc0b)(result);
         },
         signMessage: async (message)=>{
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
@@ -189,7 +198,7 @@ function $1f2f668e7c4cf993$export$2e2bcd8739ae039(signerAddress, messenger, wall
                     message: message
                 })
             }, timeout);
-            return (0, $hgUW1$utils).decodeBase64url(result);
+            return (0, $639a17f1d150b861$export$91d6fadaa95edc0b)(result);
         },
         prepareTransaction: async (transaction)=>{
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
