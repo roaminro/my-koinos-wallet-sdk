@@ -5,7 +5,7 @@ export function base64EncodeURL(byteArray) {
 }
 
 export function base64DecodeURL(b64urlstring) {
-  return new Uint8Array(window.atob(b64urlstring.replace(/-/g, '+').replace(/_/g, '/')).split('').map(val => {
+  return new Uint8Array(atob(b64urlstring.replace(/-/g, '+').replace(/_/g, '/')).split('').map(val => {
     return val.charCodeAt(0)
   }))
 }
