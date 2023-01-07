@@ -1,3 +1,5 @@
+var $8zHUo$koilib = require("koilib");
+
 function $parcel$defineInteropFlag(a) {
   Object.defineProperty(a, '__esModule', {value: true, configurable: true});
 }
@@ -169,6 +171,7 @@ function $e18943e3c35946bf$export$2e2bcd8739ae039(messenger, walletConnectorMess
 
 
 
+
 function $7371ac622f10d4f8$export$2e2bcd8739ae039(signerAddress, messenger, walletConnectorMessengerId, timeout) {
     return {
         provider: (0, $e18943e3c35946bf$export$2e2bcd8739ae039)(messenger, walletConnectorMessengerId, timeout),
@@ -185,7 +188,7 @@ function $7371ac622f10d4f8$export$2e2bcd8739ae039(signerAddress, messenger, wall
                     hash: hash
                 })
             }, timeout);
-            return result;
+            return (0, $8zHUo$koilib.utils).decodeBase64url(result);
         },
         signMessage: async (message)=>{
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {
@@ -196,7 +199,7 @@ function $7371ac622f10d4f8$export$2e2bcd8739ae039(signerAddress, messenger, wall
                     message: message
                 })
             }, timeout);
-            return result;
+            return (0, $8zHUo$koilib.utils).decodeBase64url(result);
         },
         prepareTransaction: async (transaction)=>{
             const { result: result  } = await messenger.sendRequest(walletConnectorMessengerId, {

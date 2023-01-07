@@ -1,4 +1,4 @@
-import { Signer } from 'koilib'
+import { Signer, utils } from 'koilib'
 import {
   BlockJson,
   SendTransactionOptions,
@@ -33,7 +33,7 @@ export default function generateSigner(
         })
       }, timeout)
 
-      return result as Uint8Array
+      return utils.decodeBase64url(result as string)
     },
 
     signMessage: async (message: string | Uint8Array): Promise<Uint8Array> => {
@@ -46,7 +46,7 @@ export default function generateSigner(
         })
       }, timeout)
 
-      return result as Uint8Array
+      return utils.decodeBase64url(result as string)
     },
 
     prepareTransaction: async (

@@ -1,6 +1,6 @@
 {
   "name": "@roamin/my-koinos-wallet-sdk",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "source": "src/index.ts",
   "main": "dist/my-koinos-wallet-sdk.js",
   "module": "dist/my-koinos-wallet-sdk.module.js",
@@ -16,10 +16,11 @@
     "@typescript-eslint/parser": "^5.46.1",
     "eslint": "^8.29.0",
     "parcel": "^2.8.1",
-    "typescript": ">=3.0.0",
+    "typescript": ">=3.0.0"
+  },
+  "dependencies": {
     "koilib": "^5.2.3"
   },
-  "dependencies": {},
   "scripts": {
     "lint": "eslint --max-warnings 0 --ext ts \"src/**/*.ts\"",
     "watch": "parcel watch",
