@@ -160,12 +160,12 @@ function $cf9e29f94c1aaec2$export$2e2bcd8739ae039(messenger, walletConnectorMess
 
 
 function $639a17f1d150b861$export$4d7c1d4e1df91ff5(byteArray) {
-    return window.btoa(Array.from(new Uint8Array(byteArray)).map((val)=>{
+    return btoa(Array.from(new Uint8Array(byteArray)).map((val)=>{
         return String.fromCharCode(val);
     }).join("")).replace(/\+/g, "-").replace(/\//g, "_").replace(/\\=/g, "");
 }
 function $639a17f1d150b861$export$91d6fadaa95edc0b(b64urlstring) {
-    return new Uint8Array(window.atob(b64urlstring.replace(/-/g, "+").replace(/_/g, "/")).split("").map((val)=>{
+    return new Uint8Array(atob(b64urlstring.replace(/-/g, "+").replace(/_/g, "/")).split("").map((val)=>{
         return val.charCodeAt(0);
     }));
 }
