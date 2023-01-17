@@ -20,7 +20,7 @@ import MyKoinosWallet from '@roamin/my-koinos-wallet-sdk'
 import { Contract, utils } from "koilib"
 
 (async () => {
-  const walletConnectorUrl = 'https://my-koinos-wallet.vercel.app/embed/wallet-connector'
+  const walletConnectorUrl = 'https://mykw.vercel.app/embed/wallet-connector'
 
   const mkw = new MyKoinosWallet(walletConnectorUrl)
   await mkw.connect()
@@ -62,7 +62,7 @@ import { Contract, utils } from "koilib"
 <script type="module">
   import MyKoinosWallet from 'https://cdn.jsdelivr.net/gh/roaminro/my-koinos-wallet-sdk@latest/dist/my-koinos-wallet-sdk.module.js'
 
-  const walletConnectorUrl = 'https://my-koinos-wallet.vercel.app/embed/wallet-connector'
+  const walletConnectorUrl = 'https://mykw.vercel.app/embed/wallet-connector'
 
   const mkw = new MyKoinosWallet(walletConnectorUrl)
   await mkw.connect()
@@ -106,7 +106,7 @@ import MyKoinosWallet from '@roamin/my-koinos-wallet-sdk'
 import { Contract, utils } from "koilib"
 
 (async () => {
-  const walletConnectorUrl = 'https://my-koinos-wallet.vercel.app/embed/wallet-connector'
+  const walletConnectorUrl = 'https://mykw.vercel.app/embed/wallet-connector'
 
   const mkw = new MyKoinosWallet(walletConnectorUrl)
   await mkw.connect()
@@ -153,7 +153,7 @@ import { Contract, utils } from "koilib"
 <script type="module">
   import MyKoinosWallet from 'https://cdn.jsdelivr.net/gh/roaminro/my-koinos-wallet-sdk@latest/dist/my-koinos-wallet-sdk.module.js'
 
-  const walletConnectorUrl = 'https://my-koinos-wallet.vercel.app/embed/wallet-connector'
+  const walletConnectorUrl = 'https://mykw.vercel.app/embed/wallet-connector'
 
   const mkw = new MyKoinosWallet(walletConnectorUrl)
   await mkw.connect()
