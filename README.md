@@ -13,7 +13,7 @@ yarn add @roamin/my-koinos-wallet-sdk
 ```
 ## Read a Koin balance:
 
-### Using as a CommonJS library (React, Vue, etc...)
+### Using as a CommonJS library
 
 ```ts
 import MyKoinosWallet from '@roamin/my-koinos-wallet-sdk'
@@ -99,7 +99,7 @@ import { Contract, utils } from "koilib"
 
 ## Send Koin tokens:
 
-### Using as a CommonJS library (React, Vue, etc...)
+### Using as a CommonJS library
 
 ```ts
 import MyKoinosWallet from '@roamin/my-koinos-wallet-sdk'
@@ -191,4 +191,113 @@ import { Contract, utils } from "koilib"
   console.log('transfer successful');
 </script>
 </html>
+```
+
+## Use in ReactJS
+It is recommended to initialize the SDK in a ReactJS Context Provider. Here's an example on how to initialize the SDK and then use it in a component.
+
+```ts
+// MKWProvider.tsx
+import React, {
+  useContext,
+  useState,
+  createContext,
+  useEffect,
+  useRef,
+} from 'react'
+import MyKoinosWallet from '@roamin/my-koinos-wallet-sdk'
+
+type MKWContextType = {
+  mkw?: MyKoinosWallet;
+  isLoading: boolean;
+};
+
+export const MKWContext = createContext<MKWContextType>({
+  isLoading: false,
+})
+
+export const useMKW = () => useContext(MKWContext)
+
+export const MKWProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): JSX.Element => {
+  const [isLoading, setIsLoading] = useState(true)
+  const mkwRef = useRef<MyKoinosWallet>()
+
+  useEffect(() => {
+    mkwRef.current = new MyKoinosWallet(
+      'https://mykw.vercel.app/embed/wallet-connector'
+    )
+
+    const setup = async () => {
+      await mkwRef.current.connect()
+      setIsLoading(false)
+    }
+
+    setup()
+
+    return () => {
+      mkwRef.current.close()
+    }
+  }, [])
+
+  return (
+    <MKWContext.Provider
+      value={{
+        mkw: mkwRef.current,
+        isLoading,
+      }}
+    >
+      {children}
+    </MKWContext.Provider>
+  )
+}
+```
+```ts
+// _app.tsx
+import type { AppProps } from 'next/app'
+import { MKWProvider } from '../context/MKWProvider'
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <MKWProvider>
+      <Component {...pageProps} />
+    </MKWProvider>
+  )
+}
+
+export default MyApp;
+```
+```ts
+// MyComponent.tsx
+import type { NextPage } from 'next'
+import { useMKW } from './MKWProvider'
+
+const MyComponent: NextPage = () => {
+  const { mkw, isLoading } = useMKW()
+
+  const onClick = async () => {
+    const acceptedPermissions = await mkw.requestPermissions({
+      accounts: ['getAccounts'],
+      provider: ['readContract'],
+    })
+
+    console.log(acceptedPermissions)
+  }
+
+  return (
+    <div>
+      <main>
+        <p>HELLO MKW!</p>
+        <button disabled={isLoading} onClick={onClick}>
+          Request Permissions
+        </button>
+      </main>
+    </div>
+  )
+}
+
+export default MyComponent
 ```
