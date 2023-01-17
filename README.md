@@ -268,7 +268,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp;
+export default MyApp
 ```
 ```ts
 // MyComponent.tsx
@@ -279,6 +279,8 @@ const MyComponent: NextPage = () => {
   const { mkw, isLoading } = useMKW()
 
   const onClick = async () => {
+    if (!mkw || isLoading) return
+    
     const acceptedPermissions = await mkw.requestPermissions({
       accounts: ['getAccounts'],
       provider: ['readContract'],
